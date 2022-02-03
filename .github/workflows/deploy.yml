@@ -22,3 +22,16 @@ jobs:
         env: 
           CI: true
         run: npm ci
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-2
+
+      - name: Deploy
+        run: |
+          npm run build 
+          zip -j deploy.zip ./src/*
+          aws lambda update-function-code --function-name=ivos-lambda-function --zip-file=fileb://deploy.zip
