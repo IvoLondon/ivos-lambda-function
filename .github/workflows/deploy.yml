@@ -13,16 +13,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout/@v2
 
-      - name: Setup node
-        uses: actions/setup-node/@v2
-        with: 
-          node-version: "14"
-
-      - name: Install
-        env: 
-          CI: true
-        run: npm ci
-
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -32,6 +22,5 @@ jobs:
 
       - name: Deploy
         run: |
-          npm run build 
           zip -j deploy.zip ./src/*
           aws lambda update-function-code --function-name=ivos-lambda-function --zip-file=fileb://deploy.zip
